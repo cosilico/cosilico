@@ -26,12 +26,15 @@ setup(
     packages=find_packages(),
     python_requires='>=3.6',
     install_requires=[
+        'altair>=4.1.0',
+        'anndata>=0.7.4',
         'pandas>=1.0.0',
         'seaborn>=0.10.0',
         'scipy>=1.4.1',
         'matplotlib>=3.2.1',
         ],
     include_package_data = True,
+    package_data = {'cosilico': ['datasets/data/*']},
 
 #    entry_points={ 
 #        'console_scripts': [
