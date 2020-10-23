@@ -2,7 +2,7 @@ import altair as alt
 import pandas as pd
 
 
-def stripplot(x, y, data, size=8):
+def stripplot(x, y, data, size=8, y_autoscale=True):
     """Display a basic stripplot
     
     Largely based on
@@ -19,15 +19,19 @@ def stripplot(x, y, data, size=8):
         Dataframe holding x and y
     size : int
         Size of circle markers
-        
+    y_autoscale : bool
+        Autoscale the y-axis to fit the data,
+        otherwise axis starts at zero.
+
     
     Example
     -------
-    >>> from cosilico.base.stripplot import stripplot
+    >>> import cosilico.base as base
     >>> import seaborn as sns
+    >>>
     >>> iris = sns.load_dataset('iris')
     >>>
-    >>> stripplot('species', 'sepal_width', iris)
+    >>> base.stripplot('species', 'sepal_width', iris)
 
     Returns
     -------
@@ -68,9 +72,12 @@ def stripplot(x, y, data, size=8):
                 grid=False, labels=False),
             scale=alt.Scale(),
         ),
-        y=alt.Y(f'{y}:Q'),
+        y=alt.Y(f'{y}:Q',
+            scale=alt.Scale(zero=not y_autoscale)
+        ),
         color=alt.Color(f'{x}:N', legend=None),
         column=column,
+
     ).transform_calculate(
         # Generate Gaussian jitter with a Box-Muller transform
         jitter='sqrt(-2*log(random()))*cos(2*PI*random())'

@@ -2,7 +2,8 @@ import altair as alt
 import pandas as pd
 
 
-def scatterplot(x, y, data, hue=None, color=None, opacity=1.):
+def scatterplot(x, y, data, hue=None, color=None, opacity=1.,
+        x_autoscale=True, y_autoscale=True):
     """Display a basic scatterplot.
 
     Parameters
@@ -20,15 +21,22 @@ def scatterplot(x, y, data, hue=None, color=None, opacity=1.):
         If hue is not None, then color will be overriden by hue
     opacity : float
         Opacity of the points in the plot
+    x_autoscale : bool
+        Scale the x-axis to fit the data,
+        otherwise axis starts at zero
+    y_autoscale : bool
+        Scale the y-axis to fit the data,
+        otherwise axis starts at zero
 
 
     Example
     -------
-    >>> from cosilico.base.scatter import scatterplot
+    >>> import cosilico.base as base
     >>> import seaborn as sns
+    >>>
     >>> iris = sns.load_dataset('iris')
     >>>
-    >>> scatterplot('sepal_length', 'sepal_width', iris, hue='species')
+    >>> base.scatterplot('sepal_length', 'sepal_width', iris, hue='species')
     
     Returns
     -------
@@ -47,10 +55,10 @@ def scatterplot(x, y, data, hue=None, color=None, opacity=1.):
 
     chart = alt.Chart(data).mark_point().encode(
         x=alt.X(f'{x}:Q',
-            scale=alt.Scale(zero=False)
+            scale=alt.Scale(zero=not x_autoscale)
         ),
         y=alt.Y(f'{y}:Q',
-            scale=alt.Scale(zero=False)
+            scale=alt.Scale(zero=not y_autoscale)
         )
     ).configure_mark(**configure_mark_kwargs)
 
@@ -58,7 +66,7 @@ def scatterplot(x, y, data, hue=None, color=None, opacity=1.):
 
 
 def jointplot(x, y, data, hue=None, color=None, show_x=True,
-        show_y=True, opacity=1.):
+        show_y=True, x_autoscale=True, y_autoscale=True, opacity=1.):
     """Display a scatterplot with axes distributions.
 
     Parameters
@@ -78,17 +86,24 @@ def jointplot(x, y, data, hue=None, color=None, show_x=True,
         Show the distribution for the x-axis values
     show_y : bool
         Show the distribution for the y-axis values
+    x_autoscale : bool
+        Scale the x-axis to fit the data,
+        otherwise axis starts at zero
+    y_autoscale : bool
+        Scale the y-axis to fit the data,
+        otherwise axis starts at zero
     opacity : float
         Opacity of the points in the plot
 
 
     Example
     -------
-    >>> from cosilico.base.scatter import scatterplot
+    >>> import cosilico.base as base
+    >>>
     >>> import seaborn as sns
     >>> iris = sns.load_dataset('iris')
     >>>
-    >>> jointplot('sepal_length', 'sepal_width', iris, hue='species')
+    >>> base.jointplot('sepal_length', 'sepal_width', iris, hue='species')
     
     Returns
     -------
