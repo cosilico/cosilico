@@ -187,3 +187,39 @@ def layered_distribution_plot(x, data, hue=None, opacity=.6, bandwidth=.3,
     )
 
     return chart
+
+
+def boxplot(x, y, data, color=None):
+    """Display a boxplot.
+
+    Arguments
+    ---------
+    x : str
+        column in data holding x-axis categories
+    y : str
+        column in data holding y-axis values
+    data : pandas.DataFrame
+        dataframe holding x and y
+    color : str, tuple, None
+        color of the boxplots. if None then color will be defined by x
+
+    Example
+    -------
+    >>> import seaborn as sns
+    >>> import cosilico.base as base
+    >>>
+    >>> iris = sns.load_dataset('iris')
+    >>>
+    >>> base.boxplot('species', 'sepal_width', iris)
+
+    Output
+    ------
+    altair.Chart
+    """
+    chart = alt.Chart(data).mark_boxplot().encode(
+        x=alt.X(f'{x}:N'),
+        y=alt.Y(f'{y}:Q'),
+        color=alt.Color(f'{x}:N' if color is None else color)
+    )
+
+    return chart

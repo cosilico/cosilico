@@ -3,7 +3,7 @@ import pandas as pd
 
 
 def scatterplot(x, y, data, hue=None, color=None, opacity=1.,
-        x_autoscale=True, y_autoscale=True):
+        x_autoscale=True, y_autoscale=True, no_config=False):
     """Display a basic scatterplot.
 
     Parameters
@@ -27,6 +27,11 @@ def scatterplot(x, y, data, hue=None, color=None, opacity=1.,
     y_autoscale : bool
         Scale the y-axis to fit the data,
         otherwise axis starts at zero
+    no_config : bool
+        If no_config, then dont configure scatterplot marks.
+        This is necessary if you are planning on concatenating
+        charts later in your workflow. If no_config is true then
+        opacity and color will not be applied.
 
 
     Example
@@ -60,7 +65,10 @@ def scatterplot(x, y, data, hue=None, color=None, opacity=1.,
         y=alt.Y(f'{y}:Q',
             scale=alt.Scale(zero=not y_autoscale)
         )
-    ).configure_mark(**configure_mark_kwargs)
+    )
+
+    if not no_config:
+        chart = chart.configure_mark(**configure_mark_kwargs)
 
     return chart
 

@@ -2,7 +2,8 @@ import altair as alt
 import pandas as pd
 
 
-def stripplot(x, y, data, size=8, y_autoscale=True):
+def stripplot(x, y, data, size=8, y_autoscale=True,
+        y_label=None, x_label=None,):
     """Display a basic stripplot
     
     Largely based on
@@ -22,6 +23,10 @@ def stripplot(x, y, data, size=8, y_autoscale=True):
     y_autoscale : bool
         Autoscale the y-axis to fit the data,
         otherwise axis starts at zero.
+    y_label : str, None
+        Title of y-axis. If None then defaults to y.
+    x_label : str, None
+        Title of x-axis. If None then defaults to x.
 
     
     Example
@@ -66,13 +71,14 @@ def stripplot(x, y, data, size=8, y_autoscale=True):
     stripplot =  alt.Chart(data, width=40).mark_circle(size=size).encode(
         x=alt.X(
             'jitter:Q',
-            title=None,
+            title=x_label if x_label is not None else x,
             axis=alt.Axis(values=[0],
                 ticks=True if x in data.columns else False,
                 grid=False, labels=False),
             scale=alt.Scale(),
         ),
         y=alt.Y(f'{y}:Q',
+            title=y_label if y_label is not None else y,
             scale=alt.Scale(zero=not y_autoscale)
         ),
         color=alt.Color(f'{x}:N', legend=None),
@@ -81,10 +87,6 @@ def stripplot(x, y, data, size=8, y_autoscale=True):
     ).transform_calculate(
         # Generate Gaussian jitter with a Box-Muller transform
         jitter='sqrt(-2*log(random()))*cos(2*PI*random())'
-    ).configure_facet(
-        spacing=0
-    ).configure_view(
-        stroke=None
     )
 
     return stripplot
