@@ -41,7 +41,8 @@ def qc_histogram(adata, variables, width=700):
     return chart
 
 
-def qc_scatter(adata, x, variables, width=700, hist_height=100):
+def qc_scatter(adata, x, variables, width=700, hist_height=100,
+        spacing=20):
     """Display QC variables for the given single cell data as a
     scatter plot.
 
@@ -54,9 +55,9 @@ def qc_scatter(adata, x, variables, width=700, hist_height=100):
     variables : Collection
         List of variables for y-axes. Must be in adata.obs
     width : int
-        Width of chart
-    hist_height : int
-        Height of histograms
+        Width of scatter portion of chart
+    spacing : int
+        spacing between two jointplots
 
     Example
     -------
@@ -75,15 +76,12 @@ def qc_scatter(adata, x, variables, width=700, hist_height=100):
     """
     chart = None
     for var in variables:
-        scatter = base.scatterplot(x, var, adata.obs)
-        scatter = scatter.properties(width=int(width / len(variables)))
-        histogram = base.histogram(x, adata.obs, maxbins=50, color='orange')
-        histogram = histogram.properties(width=int(width / len(variables)),
-            height=hist_height)
-        scatter = alt.vconcat(scatter, histogram).resolve_scale(x='shared')
+        scale = int(width / len(variables))
+        jointplot = base.clean_jointplot(x, var, adata.obs, show_x=True,
+                apply_configure_view=False, bandwidth_scalar=50)
         if chart is None:
-            chart = scatter
+            chart = jointplot
         else:
-            chart |= scatter
-    return chart
+            chart = alt.hconcat(chart, jointplot, spacing=spacing)
+    return chart.configure_view(strokeWidth=0)
 
