@@ -5,7 +5,7 @@ import re
 import anndata
 
 def raw_pbmc():
-    """Load raw 10x pbmc count data.
+    """Load raw 10x pbmc count data as a anndata.AnnData object
 
     Downloaded from http://cf.10xgenomics.com/samples/cell-exp/1.1.0/\
             pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz
@@ -23,8 +23,17 @@ def raw_pbmc():
     - adata.var['mt'] = adata.var_names.str.startswith('MT-')
     - sc.pp.calculate_qc_metrics(adata, qc_vars=['mt'],
             percent_top=None, log1p=False, inplace=True)
+
+    Example
+    -------
+    >>> from cosilico.datasets import helpers
+    >>> adata = helpers.raw_pbmc()
+
+    Returns
+    -------
+    anndata.AnnData
+
     """
     fp = pkg_resources.resource_filename('cosilico',
             'datasets/data/raw_pbmc.h5ad')
     return anndata.read_h5ad(fp)
-
